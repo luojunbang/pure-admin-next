@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model Token {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique @db.ObjectId
+  token     String
+  expiredIn DateTime
+}
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  username  String   @unique
+  password  String
+  isValid   Boolean  @default(false)
+  profile   Profile  @relation(fields: [profileId], references: [id])
+  profileId String   @db.ObjectId
+  role      Role[]   @relation(fields: [roleIds], references: [id])
+  roleIds   String[] @db.ObjectId
+}
+
+model Profile {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  name    String?
+  email   String  @unique
+  contact String  @unique
+  avatar  String?
+  User    User[]
+  Role    Role?   @relation(fields: [roleId], references: [id])
+  roleId  String? @db.ObjectId
+}
+
+model Role {
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  name    String    @unique
+  menus   Menu[]    @relation(fields: [menuIds], references: [id])
+  menuIds String[]  @db.ObjectId
+  Profile Profile[]
+  user    User[]    @relation(fields: [userIds], references: [id])
+  userIds String[]  @db.ObjectId
+}
+
+enum MenuType {
+  OPERATE
+  MENU
+  TAB
+}
+
+model Menu {
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  parentId String
+  name     String
+  type     MenuType
+  Role     Role[]   @relation(fields: [roleIds], references: [id])
+  roleIds  String[] @db.ObjectId
+}
