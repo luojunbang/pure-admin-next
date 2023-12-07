@@ -8,8 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "generate": "prisma generate",
-    "studio": "dotenv -e .env.local -- npx prisma studio"
+    "generate": "dotenv -e .env.local prisma generate && dotenv -e .env.local prisma db push",
+    "studio": "dotenv -e .env.local npx prisma studio"
   },
   "dependencies": {
     "@nextui-org/react": "^2.2.9",

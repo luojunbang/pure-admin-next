@@ -1,9 +1,8 @@
 import _prisma from '../prisma'
-
+import { handleError } from '@/utils'
 import md5 from 'crypto-js/md5'
 import { User } from '@prisma/client'
 const password = md5(process.env.DEFAULT_PASSWORD as string).toString()
-
 import { z } from 'zod'
 
 export const userInput = z.object({
@@ -19,8 +18,9 @@ export const userInput = z.object({
       required_error: 'password is required',
       invalid_type_error: 'password must be a string',
     })
+    .min(8, 'less letter is 8. ')
     .max(50, 'max letter is 50'),
-  updateDate: z.string().datetime(),
+  updateDate: z.date(),
 })
 
 const prisma = _prisma.$extends({
@@ -38,37 +38,79 @@ const prisma = _prisma.$extends({
   },
 })
 
-export function userAdd(user: User) {
-  return prisma.user.create({
-    data: user,
-  })
+/**
+ * add user
+ * @param user
+ * @returns
+ */
+export async function userAdd(user: User) {
+  try {
+    const data = await prisma.user.create({
+      data: user,
+    })
+    return data
+  } catch (e) {
+    handleError(e)
+  }
 }
 
-export function userInfo(username: string) {
-  return prisma.user.findUnique({
+/**
+ * get user info by username
+ * @param username
+ * @returns
+ */
+export async function userInfo(username: string): Promise<User> {
+  const data = await prisma.user.findUnique({
     where: {
       username,
     },
   })
+  if (!data) throw `can' t find the record. `
+  return data
 }
 
-export function userUpdate(username: string, user: User) {
-  return prisma.user.update({
-    where: {
-      username,
-    },
-    data: user,
-  })
+/**
+ * update user by username
+ * @param username
+ * @param user
+ * @returns
+ */
+export async function userUpdate(username: string, user: User) {
+  try {
+    const data = await prisma.user.update({
+      where: {
+        username,
+      },
+      data: user,
+    })
+    return data
+  } catch (e) {
+    handleError(e)
+  }
 }
 
-export function userDelete(username: string) {
-  return prisma.user.delete({
-    where: {
-      username,
-    },
-  })
+/**
+ * delete user by username
+ * @param username
+ * @returns
+ */
+export async function userDelete(username: string) {
+  try {
+    const data = await prisma.user.delete({
+      where: {
+        username,
+      },
+    })
+    return data
+  } catch (e) {
+    handleError(e)
+  }
 }
 
+/**
+ * init user admin
+ * @returns
+ */
 export function initUserAdmin() {
   return prisma.user
     .create({
