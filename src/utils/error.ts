@@ -23,3 +23,6 @@ export function handleError(e: unknown) {
   }
   throw e
 }
+
+// import { logFileStruct } from 'lo-utils'
+// logFileStruct('./src/app', ['api'])
