@@ -1,16 +1,14 @@
-'use client'
-
+import { useTranslation } from '@/i18n'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
-import { useEffect } from 'react'
 
-export default function Home({ params }: { params: { lang: string } }) {
+export default async function Home({ params }: { params: { lang: string } }) {
   const { lang } = params
-  useEffect(() => {
-    console.log('mount')
-    return () => {
-      console.log('unmount')
-    }
-  })
-  return `Your language is ${lang}`
+  const { t } = await useTranslation(lang)
+
+  return (
+    <div>
+      {t('title')} Your language is {lang}
+    </div>
+  )
 }
