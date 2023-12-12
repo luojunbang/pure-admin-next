@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
-import { cookieName, defaultLang, languages } from '@/i18n/setting'
+import { cookieName, defaultLang, languages } from '@/i18n/settings'
 
 import acceptLanguage from 'accept-language'
 
