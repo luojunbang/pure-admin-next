@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
-import { cookieName, defaultLang, languages } from '@/i18n/settings'
+import { cookieName, fallbackLng, languages } from '@/i18n/settings'
 
 import acceptLanguage from 'accept-language'
 
@@ -13,7 +13,7 @@ export function middleware(request: NextRequest) {
   if (cookieStore.has(cookieName))
     lang = acceptLanguage.get(cookieStore.get(cookieName)?.value)
   if (!lang) lang = acceptLanguage.get(request.headers.get('Accept-Language'))
-  if (!lang) lang = defaultLang
+  if (!lang) lang = fallbackLng
 
   if (!languages.some((i) => request.nextUrl.pathname.startsWith(`/${i}`))) {
     return NextResponse.redirect(

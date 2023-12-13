@@ -20,6 +20,7 @@ i18next
   .use(LanguageDetector)
   .use(
     resourcesToBackend(
+      // 懒加载
       (language: string, namespace: string) =>
         import(`./locales/${language}/${namespace}.json`)
     )
@@ -44,13 +45,6 @@ export function useTranslation(
   if (runsOnServerSide && lng && i18n.resolvedLanguage !== lng) {
     i18n.changeLanguage(lng)
   } else {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const [activeLng, setActiveLng] = useState(i18n.resolvedLanguage)
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useEffect(() => {
-      if (activeLng === i18n.resolvedLanguage) return
-      setActiveLng(i18n.resolvedLanguage)
-    }, [activeLng, i18n.resolvedLanguage])
     // eslint-disable-next-line react-hooks/rules-of-hooks
     useEffect(() => {
       if (!lng || i18n.resolvedLanguage === lng) return
