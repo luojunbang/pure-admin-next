@@ -1,6 +1,6 @@
 import { userAdd } from '@/db'
 import { NextRequest } from 'next/server'
-import { rp } from '@/utils'
+import { rp } from '@/utils/server'
 
 export async function POST(request: NextRequest) {
   try {

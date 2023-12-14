@@ -1,18 +1,29 @@
+import { NextResponse } from 'next/server'
+export const defaultErrorMsg = '500 Internal Error.'
+
 export const rp = {
-  common(code: number, data: any, message?: string) {
-    return Response.json({
-      code,
-      message: message ?? '',
-      data,
-    })
+  common(code: string, data: any, message?: string, config?: any) {
+    return NextResponse.json(
+      {
+        code,
+        msg: message ?? '',
+        data,
+      },
+      config
+    )
   },
   ret200(data: any) {
-    return this.common(200, data)
+    return this.common('OK', data)
   },
   ret201(data: any, message: string) {
-    return this.common(201, data, message)
+    return this.common('OPERATE_DONE', data, message)
   },
-  ret500(message: any = '500 Internal Error.') {
-    return this.common(500, {}, message)
+  ret500(message: any = defaultErrorMsg) {
+    return this.common('OPERATE_FAIL', {}, message)
+  },
+  ret401(message: string = 'Token fail.') {
+    return this.common('TOKEN_FAIL', {}, message, { status: 401 })
   },
 }
+
+export const infoConfig = {}

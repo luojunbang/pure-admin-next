@@ -21,13 +21,12 @@ model User {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
   username   String   @unique
   password   String
-  isValid    Boolean  @default(false)
-  profile    Profile? @relation(fields: [profileId], references: [id])
-  profileId  String?  @db.ObjectId
-  role       Role[]   @relation(fields: [roleIds], references: [id])
-  roleIds    String[] @db.ObjectId
+  isValid    Boolean @default(false)
   updateDate DateTime
   createDate DateTime @default(now())
+  profile    Profile?
+  role       Role[]   @relation(fields: [roleIds], references: [id])
+  roleIds    String[] @db.ObjectId
 }
 
 model Profile {
@@ -36,19 +35,17 @@ model Profile {
   contact String  @unique
   email   String? @unique
   avatar  String?
-  User    User[]
-  Role    Role?   @relation(fields: [roleId], references: [id])
-  roleId  String? @db.ObjectId
+  user    User    @relation(fields: [userId], references: [id])
+  userId  String  @unique @db.ObjectId
 }
 
 model Role {
-  id      String    @id @default(auto()) @map("_id") @db.ObjectId
-  name    String    @unique
-  menus   Menu[]    @relation(fields: [menuIds], references: [id])
-  menuIds String[]  @db.ObjectId
-  Profile Profile[]
-  user    User[]    @relation(fields: [userIds], references: [id])
-  userIds String[]  @db.ObjectId
+  id      String   @id @default(auto()) @map("_id") @db.ObjectId
+  name    String   @unique
+  menus   Menu[]   @relation(fields: [menuIds], references: [id])
+  menuIds String[] @db.ObjectId
+  users   User[]   @relation(fields: [userIds], references: [id])
+  userIds String[] @db.ObjectId
 }
 
 enum MenuType {
@@ -63,6 +60,6 @@ model Menu {
   name     String
   path     String
   type     MenuType
-  Role     Role[]   @relation(fields: [roleIds], references: [id])
+  roles    Role[]   @relation(fields: [roleIds], references: [id])
   roleIds  String[] @db.ObjectId
 }

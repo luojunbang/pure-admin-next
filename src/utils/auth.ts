@@ -1,15 +1,12 @@
-import jwt from 'jsonwebtoken'
+export const appName = 'pure-admin'
+export const localStorageName = `${appName}__token`
 
-const s = '12345'
-var token = jwt.sign({ foo: 'bar' }, s, { expiresIn: 5 })
-console.log('token:', token, Date.now())
-setTimeout(() => {
-  const after = jwt.verify(token, s)
-  console.log('after:', after)
+export const getToken = () => {
+  return localStorage.getItem(localStorageName) ?? ''
+}
 
-  const { exp, iat } = after
-  console.log(iat === exp)
+export const hasToken = () => !!getToken()
 
-  console.log('iat:', new Date(iat * 1000))
-  console.log('exp:', new Date(exp * 1000))
-}, 1000 * 3)
+export const saveToken = token => {
+  return localStorage.setItem(localStorageName, token)
+}

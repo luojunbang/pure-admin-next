@@ -3,7 +3,7 @@
 import { useTranslation } from '@/i18n'
 import { useEffect } from 'react'
 
-let a = 1
+import { user } from '@/api'
 
 export default function Page({
   params,
@@ -13,18 +13,14 @@ export default function Page({
   const { userId, lang } = params
   const { t } = useTranslation(lang)
   useEffect(() => {
-    async function fetchData() {                
+    async function fetchData() {
       // You can await here
-      const data = await fetch(`/api/user/${params.userId}`).then(res =>
-        res.json()
-      )
+      const data = await user.getUserById(userId)
       console.log(data)
-      // ...
     }
-    a += 1
-    console.log('Mount...')
-    return () => console.log('unMount...', a)
-  }, [params.userId])
+    fetchData()
+    return () => console.log('unMount...')
+  }, [userId])
   return (
     <div>
       {userId}

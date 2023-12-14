@@ -1,5 +1,5 @@
 import _prisma from '../prisma'
-import { handleError } from '@/utils'
+import { handleError } from '@/utils/server'
 import md5 from 'crypto-js/md5'
 import { User } from '@prisma/client'
 const password = md5(process.env.DEFAULT_PASSWORD as string).toString()
@@ -21,13 +21,14 @@ export const userInput = z.object({
     .min(8, 'less letter is 8. ')
     .max(50, 'max letter is 50'),
   updateDate: z.date(),
+  isValid: z.boolean(),
 })
 
 const prisma = _prisma.$extends({
   query: {
     user: {
       create({ args, query }) {
-        args.data = userInput.parse(args.data)
+        args.data = userInput.passthrough().parse(args.data)
         return query(args)
       },
       update({ args, query }) {
@@ -133,10 +134,10 @@ export function initUserAdmin() {
         },
       },
     })
-    .then((res) => {
+    .then(res => {
       console.log('init user admin done. ')
     })
-    .catch((err) => {
+    .catch(err => {
       console.log(`init admin user fail. \n${err}`)
     })
 }
