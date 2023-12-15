@@ -21,7 +21,7 @@ specifiers:
   i18next-resources-to-backend: ^1.2.0
   jose: ^5.1.3
   jsonwebtoken: ^9.0.2
-  lo-utils: ^1.2.28
+  lo-utils: ^1.2.29
   next: 14.0.3
   next-images: ^1.8.5
   postcss: ^8
@@ -30,6 +30,7 @@ specifiers:
   react-cookie: ^6.1.1
   react-dom: ^18
   react-i18next: ^13.5.0
+  redis: ^4.6.11
   tailwindcss: ^3.3.0
   ts-node: ^10.9.1
   tsx: ^4.6.2
@@ -50,7 +51,7 @@ dependencies:
   i18next-resources-to-backend: registry.npmmirror.com/i18next-resources-to-backend/1.2.0
   jose: registry.npmmirror.com/jose/5.1.3
   jsonwebtoken: registry.npmmirror.com/jsonwebtoken/9.0.2
-  lo-utils: registry.npmmirror.com/lo-utils/1.2.28
+  lo-utils: registry.npmmirror.com/lo-utils/1.2.29
   next: registry.npmmirror.com/next/14.0.3_biqbaboplfbrettd7655fr4n2y
   next-images: registry.npmmirror.com/next-images/1.8.5
   prisma: registry.npmmirror.com/prisma/5.7.0
@@ -58,6 +59,7 @@ dependencies:
   react-cookie: registry.npmmirror.com/react-cookie/6.1.1_react@18.2.0
   react-dom: registry.npmmirror.com/react-dom/18.2.0_react@18.2.0
   react-i18next: registry.npmmirror.com/react-i18next/13.5.0_vjow25zt5c4n2jtveyjnguixb4
+  redis: registry.npmmirror.com/redis/4.6.11
   ts-node: registry.npmmirror.com/ts-node/10.9.2_yn7bv5jzkfjmbt2js7kurghsqq
   tsx: registry.npmmirror.com/tsx/4.6.2
   zod: registry.npmmirror.com/zod/3.22.4
@@ -4947,6 +4949,72 @@ packages:
       react: registry.npmmirror.com/react/18.2.0
     dev: false
 
+  registry.npmmirror.com/@redis/bloom/1.2.0_@redis+client@1.5.12:
+    resolution: {integrity: sha512-HG2DFjYKbpNmVXsa0keLHp/3leGJz1mjh09f2RLGGLQZzSHpkmZWuwJbAvo3QcRY8p80m5+ZdXZdYOSBLlp7Cg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@redis/bloom/-/bloom-1.2.0.tgz}
+    id: registry.npmmirror.com/@redis/bloom/1.2.0
+    name: '@redis/bloom'
+    version: 1.2.0
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': registry.npmmirror.com/@redis/client/1.5.12
+    dev: false
+
+  registry.npmmirror.com/@redis/client/1.5.12:
+    resolution: {integrity: sha512-/ZjE18HRzMd80eXIIUIPcH81UoZpwulbo8FmbElrjPqH0QC0SeIKu1BOU49bO5trM5g895kAjhvalt5h77q+4A==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@redis/client/-/client-1.5.12.tgz}
+    name: '@redis/client'
+    version: 1.5.12
+    engines: {node: '>=14'}
+    dependencies:
+      cluster-key-slot: registry.npmmirror.com/cluster-key-slot/1.1.2
+      generic-pool: registry.npmmirror.com/generic-pool/3.9.0
+      yallist: registry.npmmirror.com/yallist/4.0.0
+    dev: false
+
+  registry.npmmirror.com/@redis/graph/1.1.1_@redis+client@1.5.12:
+    resolution: {integrity: sha512-FEMTcTHZozZciLRl6GiiIB4zGm5z5F3F6a6FZCyrfxdKOhFlGkiAqlexWMBzCi4DcRoyiOsuLfW+cjlGWyExOw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@redis/graph/-/graph-1.1.1.tgz}
+    id: registry.npmmirror.com/@redis/graph/1.1.1
+    name: '@redis/graph'
+    version: 1.1.1
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': registry.npmmirror.com/@redis/client/1.5.12
+    dev: false
+
+  registry.npmmirror.com/@redis/json/1.0.6_@redis+client@1.5.12:
+    resolution: {integrity: sha512-rcZO3bfQbm2zPRpqo82XbW8zg4G/w4W3tI7X8Mqleq9goQjAGLL7q/1n1ZX4dXEAmORVZ4s1+uKLaUOg7LrUhw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@redis/json/-/json-1.0.6.tgz}
+    id: registry.npmmirror.com/@redis/json/1.0.6
+    name: '@redis/json'
+    version: 1.0.6
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': registry.npmmirror.com/@redis/client/1.5.12
+    dev: false
+
+  registry.npmmirror.com/@redis/search/1.1.6_@redis+client@1.5.12:
+    resolution: {integrity: sha512-mZXCxbTYKBQ3M2lZnEddwEAks0Kc7nauire8q20oA0oA/LoA+E/b5Y5KZn232ztPb1FkIGqo12vh3Lf+Vw5iTw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@redis/search/-/search-1.1.6.tgz}
+    id: registry.npmmirror.com/@redis/search/1.1.6
+    name: '@redis/search'
+    version: 1.1.6
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': registry.npmmirror.com/@redis/client/1.5.12
+    dev: false
+
+  registry.npmmirror.com/@redis/time-series/1.0.5_@redis+client@1.5.12:
+    resolution: {integrity: sha512-IFjIgTusQym2B5IZJG3XKr5llka7ey84fw/NOYqESP5WUfQs9zz1ww/9+qoz4ka/S6KcGBodzlCeZ5UImKbscg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@redis/time-series/-/time-series-1.0.5.tgz}
+    id: registry.npmmirror.com/@redis/time-series/1.0.5
+    name: '@redis/time-series'
+    version: 1.0.5
+    peerDependencies:
+      '@redis/client': ^1.0.0
+    dependencies:
+      '@redis/client': registry.npmmirror.com/@redis/client/1.5.12
+    dev: false
+
   registry.npmmirror.com/@rushstack/eslint-patch/1.6.0:
     resolution: {integrity: sha512-2/U3GXA6YiPYQDLGwtGlnNgKYBSwCFIHf8Y9LUY5VATHdtbLlU0Y1R3QoBnT0aB4qv/BEiVVsj7LJXoQCgJ2vA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@rushstack/eslint-patch/-/eslint-patch-1.6.0.tgz}
     name: '@rushstack/eslint-patch'
@@ -5823,6 +5891,13 @@ packages:
     name: clsx
     version: 1.2.1
     engines: {node: '>=6'}
+    dev: false
+
+  registry.npmmirror.com/cluster-key-slot/1.1.2:
+    resolution: {integrity: sha512-RMr0FhtfXemyinomL4hrWcYJxmX6deFdCxpJzhDttxgO1+bcCnkk+9drydLVDmAMG7NE6aN/fl4F7ucU/90gAA==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/cluster-key-slot/-/cluster-key-slot-1.1.2.tgz}
+    name: cluster-key-slot
+    version: 1.1.2
+    engines: {node: '>=0.10.0'}
     dev: false
 
   registry.npmmirror.com/color-convert/1.9.3:
@@ -6899,6 +6974,13 @@ packages:
     version: 1.2.3
     dev: true
 
+  registry.npmmirror.com/generic-pool/3.9.0:
+    resolution: {integrity: sha512-hymDOu5B53XvN4QT9dBmZxPX4CWhBPPLguTZ9MMFeFa/Kg0xWVfylOVNlJji/E7yTZWFd/q9GO5TxDLq156D7g==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/generic-pool/-/generic-pool-3.9.0.tgz}
+    name: generic-pool
+    version: 3.9.0
+    engines: {node: '>= 4'}
+    dev: false
+
   registry.npmmirror.com/gensync/1.0.0-beta.2:
     resolution: {integrity: sha512-3hN7NaskYvMDLQY55gnW3NQ+mesEAepTqlg+VEbj7zzqEMBVNhzcGYYeqFo/TlYz6eQiFcp1HcsCZO+nGgS8zg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/gensync/-/gensync-1.0.0-beta.2.tgz}
     name: gensync
@@ -7647,10 +7729,10 @@ packages:
     name: lines-and-columns
     version: 1.2.4
 
-  registry.npmmirror.com/lo-utils/1.2.28:
-    resolution: {integrity: sha512-V307iNaxP9J2j8BNuzBtnCEmQ/PfIutOCgNItUsGu41el6w2uHz40VXX4ujGUCx14/JdXJxjAVC2TjMbjwoK0Q==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lo-utils/-/lo-utils-1.2.28.tgz}
+  registry.npmmirror.com/lo-utils/1.2.29:
+    resolution: {integrity: sha512-z94hg24cAgwKn6lUWIvfYtx0D11Xeml5ZAva6Q0G5xE90u/AhcqNXQRBq86xoYK4gAcSP7afYXGbwZ5V0euYtg==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/lo-utils/-/lo-utils-1.2.29.tgz}
     name: lo-utils
-    version: 1.2.28
+    version: 1.2.29
     dev: false
 
   registry.npmmirror.com/loader-utils/2.0.4:
@@ -8461,6 +8543,19 @@ packages:
     engines: {node: '>=8.10.0'}
     dependencies:
       picomatch: registry.npmmirror.com/picomatch/2.3.1
+
+  registry.npmmirror.com/redis/4.6.11:
+    resolution: {integrity: sha512-kg1Lt4NZLYkAjPOj/WcyIGWfZfnyfKo1Wg9YKVSlzhFwxpFIl3LYI8BWy1Ab963LLDsTz2+OwdsesHKljB3WMQ==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/redis/-/redis-4.6.11.tgz}
+    name: redis
+    version: 4.6.11
+    dependencies:
+      '@redis/bloom': registry.npmmirror.com/@redis/bloom/1.2.0_@redis+client@1.5.12
+      '@redis/client': registry.npmmirror.com/@redis/client/1.5.12
+      '@redis/graph': registry.npmmirror.com/@redis/graph/1.1.1_@redis+client@1.5.12
+      '@redis/json': registry.npmmirror.com/@redis/json/1.0.6_@redis+client@1.5.12
+      '@redis/search': registry.npmmirror.com/@redis/search/1.1.6_@redis+client@1.5.12
+      '@redis/time-series': registry.npmmirror.com/@redis/time-series/1.0.5_@redis+client@1.5.12
+    dev: false
 
   registry.npmmirror.com/reflect.getprototypeof/1.0.4:
     resolution: {integrity: sha512-ECkTw8TmJwW60lOTR+ZkODISW6RQ8+2CL3COqtiJKLd6MmB45hN51HprHFziKLGkAuTGQhBb91V8cy+KHlaCjw==, registry: http://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/reflect.getprototypeof/-/reflect.getprototypeof-1.0.4.tgz}
