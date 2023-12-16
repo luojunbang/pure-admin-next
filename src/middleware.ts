@@ -5,7 +5,7 @@ import { cookieName, fallbackLng, languages } from '@/i18n/settings'
 
 import acceptLanguage from 'accept-language'
 import { tokenName } from './utils'
-import { rp } from './utils/response'
+import { defaultTokenFailMsg, rp } from './utils/response'
 import { validateToken } from './utils/token'
 
 acceptLanguage.languages(languages)
@@ -55,7 +55,8 @@ const authMiddleware = async (request: NextRequest) => {
   const headersList = headers()
   const token = headersList.get(tokenName)
   const [err, data] = await validateToken(token)
-  if (err) return rp.ret401()
+  if (err)
+    return NextResponse.json({ msg: defaultTokenFailMsg }, { status: 401 })
   const { payload } = data
   return NextResponse.next()
 }

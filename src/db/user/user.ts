@@ -5,6 +5,8 @@ import { User } from '@prisma/client'
 const password = md5(process.env.DEFAULT_PASSWORD as string).toString()
 import { z } from 'zod'
 
+const excludePassword = data => exclude<User, keyof User>(data, ['password'])
+
 export const userInput = z.object({
   username: z
     .string({
@@ -49,7 +51,7 @@ export async function userAdd(user: User) {
     const data = await prisma.user.create({
       data: user,
     })
-    return data
+    return excludePassword(data)
   } catch (e) {
     handleError(e)
   }
@@ -106,6 +108,26 @@ export async function userDelete(username: string) {
   } catch (e) {
     handleError(e)
   }
+}
+
+/**
+ * userLogin
+ */
+export async function userLogin({
+  username,
+  password,
+}: {
+  username: string
+  password: string
+}) {
+  return prisma.user
+    .findUnique({
+      where: {
+        username,
+        password,
+      },
+    })
+    .catch(handleError)
 }
 
 /**

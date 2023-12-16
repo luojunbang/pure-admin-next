@@ -14,6 +14,9 @@ import {
 import { Input } from '@nextui-org/react'
 import EyeSvg from '@/assets/icons/eye.svg'
 import EyeSlashSvg from '@/assets/icons/eye-slash.svg'
+import { system } from '@/api'
+import md5 from 'crypto-js/md5'
+
 export default function Login() {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -21,17 +24,27 @@ export default function Login() {
 
   const [isShowPassword, setIsShowPassword] = useState(false)
   const toggleIsShowPassword = () => setIsShowPassword(!isShowPassword)
-  const handleLogin = () => {
+  const handleLoginValid = () => {
     console.log(username, password)
     if (/^\d/.test(username) || username === '') {
       setMessage('Please enter a valid username')
-      return
+      return false
     }
     if (password === '') {
       setMessage('Please enter a password')
-      return
+      return false
     }
     setMessage('')
+    return true
+  }
+  const handleLogin = () => {
+    if (handleLoginValid()) {
+      system
+        .login({ username, password: md5(password).toString() })
+        .then(res => {
+          console.log(res)
+        })
+    }
   }
   return (
     <>

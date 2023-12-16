@@ -1,9 +1,15 @@
+import { userLogin } from '@/db';
+import { rp } from '@/utils/response'
+import { handleError } from '@/utils/server';
 import { headers } from 'next/headers'
 
 export async function POST(request: Request) {
-  const headersList = headers()
-  console.log('headers:', headersList)
-  console.log('request:', request)
-
-  return Response.json({ data: 'api/get' })
+  try {
+    const data = await request.json()
+    const user = await userLogin(data)
+    if(!user) return rp.ret500('账号密码错误')
+    return rp.ret200(user)
+  } catch (e) {
+    return rp.ret500(e)
+  }
 }

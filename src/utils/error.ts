@@ -1,9 +1,10 @@
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { ZodError } from 'zod'
+import { defaultErrorMsg } from './response'
 
 export function handleZodError(e: ZodError) {
   const errorInfo = e.errors
-    .map((i) => `${i.path.join('.')} ${i.message}`)
+    .map(i => `${i.path.join('.')} ${i.message}`)
     .join('; ')
   return errorInfo
 }
@@ -14,15 +15,21 @@ export function handlePrismaError(e: PrismaClientKnownRequestError) {
   return `${e.code}: ${errorInfo}`
 }
 
-export function handleError(e: unknown) {
+export function handleError(e: unknown = defaultErrorMsg) {
   if (e instanceof PrismaClientKnownRequestError) {
     throw handlePrismaError(e)
-  }
-  if (e instanceof ZodError) {
+  } else if (e instanceof ZodError) {
     throw handleZodError(e)
   }
-  throw e
+  throw handleNormalError(e)
 }
 
+export function handleNormalError(e:unknown){
+  return e instanceof Error
+    ? e.message
+    : typeof e === 'string'
+    ? e
+    : defaultErrorMsg
+}
 // import { logFileStruct } from 'lo-utils'
 // logFileStruct('./src/app', ['api'])

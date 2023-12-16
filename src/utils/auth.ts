@@ -1,4 +1,4 @@
-export const appName = 'pure-admin'
+export const appName = process.env.APP_NAME as string
 export const localStorageName = `${appName}__token`
 
 export const getToken = () => {

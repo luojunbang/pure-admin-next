@@ -1,20 +1,27 @@
 import { SignJWT, jwtVerify } from 'jose'
+import { appName } from '.'
 
 const JWT_SECRET = new TextEncoder().encode(process.env.JWT_SECRET)
 const alg = 'HS256'
 
 export function gentoken(data, expiresIn = '1s') {
-  return new SignJWT(data).setProtectedHeader({ alg }).sign(JWT_SECRET)
+  return new SignJWT(data)
+    .setProtectedHeader({ alg })
+    .setIssuedAt()
+    .setIssuer(appName)
+    .sign(JWT_SECRET)
 }
 
 export async function validateToken(token) {
   let data, err
   try {
-    data = await jwtVerify(token, JWT_SECRET)
+    data = await jwtVerify(token, JWT_SECRET, { issuer: appName })
   } catch (e) {
     err = e
   }
   return [err, data]
 }
 
-// gentoken({ userId: 'admin' }).then(console.log)
+// gentoken({ username: 'admin', userId: 'jfd9ia092h0g8qj12g01hg0' }).then(
+//   console.log
+// )

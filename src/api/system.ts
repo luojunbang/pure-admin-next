@@ -2,7 +2,7 @@ import { request } from '@/utils'
 
 export const system = {
   login(params) {
-    return request.get('/login', params)
+    return request.post('/login', params)
   },
 }
 

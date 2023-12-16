@@ -22,7 +22,7 @@ export default function Header() {
   const router = useRouter()
   useEffect(() => {
     saveToken(
-      'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJhZG1pbiJ9.yWqvSQz84SUGrxBXbhVO7U4oNrtU9dhK1SX-2pAPZ3w'
+      'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidXNlcklkIjoiamZkOWlhMDkyaDBnOHFqMTJnMDFoZzAiLCJpYXQiOjE3MDI2MjkxODAsImlzcyI6ImpmZDlpYTA5MmgwZzhxajEyZzAxaGcwIiwiYXVkIjoiYWRtaW4ifQ.Z1pITnfKQCB6DFbGEygRselPK4xvyyBDUuPreN4ijDo'
     )
     if (!hasToken()) {
       router.replace('/login')
