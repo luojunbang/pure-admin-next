@@ -11,8 +11,7 @@ export async function GET(
 ) {
   const { userId } = params
   try {
-    const data = await userInfo(userId)
-    Reflect.deleteProperty(data, 'password')
+    const data = await userInfo({username:userId})
     return rp.ret200(data)
   } catch (e) {
     return rp.ret500(e)

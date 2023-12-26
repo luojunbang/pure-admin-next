@@ -4,8 +4,9 @@ import md5 from 'crypto-js/md5'
 import { User } from '@prisma/client'
 const password = md5(process.env.DEFAULT_PASSWORD as string).toString()
 import { z } from 'zod'
+import { exclude } from 'lo-utils'
 
-const excludePassword = data => exclude<User, keyof User>(data, ['password'])
+const excludePassword = data => exclude<User, 'password'>(data, ['password'])
 
 export const userInput = z.object({
   username: z
@@ -62,14 +63,21 @@ export async function userAdd(user: User) {
  * @param username
  * @returns
  */
-export async function userInfo(username: string): Promise<User> {
+export async function userInfo({
+  username,
+  password,
+}: {
+  username: string
+  password?: string
+}) {
   const data = await prisma.user.findUnique({
     where: {
       username,
+      password
     },
   })
   if (!data) throw `can' t find the record. `
-  return data
+  return excludePassword(data)
 }
 
 /**
@@ -108,26 +116,6 @@ export async function userDelete(username: string) {
   } catch (e) {
     handleError(e)
   }
-}
-
-/**
- * userLogin
- */
-export async function userLogin({
-  username,
-  password,
-}: {
-  username: string
-  password: string
-}) {
-  return prisma.user
-    .findUnique({
-      where: {
-        username,
-        password,
-      },
-    })
-    .catch(handleError)
 }
 
 /**

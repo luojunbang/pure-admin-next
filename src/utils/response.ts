@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { CODE } from './types'
 export const defaultErrorMsg = '500 Internal Error.'
 export const defaultTokenFailMsg = 'TOKEN_FAIL'
 
@@ -14,19 +15,22 @@ export const rp = {
     )
   },
   ret200(data: any = {}) {
-    return this.common('OK', data)
+    return this.common(CODE.OK, data)
   },
   ret201(data: any, message: string) {
-    return this.common('OPERATE_DONE', data, message)
+    return this.common(CODE.DONE, data, message)
   },
   ret500(e: unknown) {
-    return this.common('OPERATE_FAIL', {}, handleNormalError(e))
+    return this.common(CODE.FAIL, {}, handleNormalError(e))
+  },
+  ret401() {
+    return this.common(CODE.FAIL, {}, defaultTokenFailMsg, { status: 401 })
   },
 }
 
 export const infoConfig = {}
 
-export function handleNormalError(e:unknown){
+export function handleNormalError(e: unknown) {
   return e instanceof Error
     ? e.message
     : typeof e === 'string'

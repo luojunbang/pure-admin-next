@@ -13,7 +13,7 @@ import {
   useSearchParams,
 } from 'next/navigation'
 
-import { hasToken, saveToken } from '@/utils'
+import { hasToken, getToken } from '@/utils'
 
 export default function Header() {
   const { lang }: { lang: string } = useParams()
@@ -21,9 +21,6 @@ export default function Header() {
   const { t } = useTranslation(lang)
   const router = useRouter()
   useEffect(() => {
-    saveToken(
-      'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwidXNlcklkIjoiamZkOWlhMDkyaDBnOHFqMTJnMDFoZzAiLCJpYXQiOjE3MDI2MjkxODAsImlzcyI6ImpmZDlpYTA5MmgwZzhxajEyZzAxaGcwIiwiYXVkIjoiYWRtaW4ifQ.Z1pITnfKQCB6DFbGEygRselPK4xvyyBDUuPreN4ijDo'
-    )
     if (!hasToken()) {
       router.replace('/login')
       return

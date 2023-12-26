@@ -1,23 +1,27 @@
+'use server'
+
 import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import type { NextFetchEvent, NextRequest } from 'next/server'
 import { cookies, headers } from 'next/headers'
 import { cookieName, fallbackLng, languages } from '@/i18n/settings'
+import kv from '@vercel/kv'
 
 import acceptLanguage from 'accept-language'
 import { tokenName } from './utils'
 import { defaultTokenFailMsg, rp } from './utils/response'
 import { validateToken } from './utils/token'
+import { getToken, setToken } from './db/redis/token'
 
 acceptLanguage.languages(languages)
 
-export async function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest, event: NextFetchEvent) {
   const { pathname } = request.nextUrl
 
   if (pathname.startsWith('/api')) {
-    return await authMiddleware(request)
+    return await authMiddleware(request, event)
   }
 
-  return pageMiddleware(request)
+  return pageMiddleware(request, event)
 }
 
 /**
@@ -25,7 +29,7 @@ export async function middleware(request: NextRequest) {
  * @param request
  * @returns
  */
-const pageMiddleware = (request: NextRequest) => {
+const pageMiddleware = (request: NextRequest, event: NextFetchEvent) => {
   const { pathname, searchParams } = request.nextUrl
 
   let lang
@@ -49,15 +53,18 @@ const pageMiddleware = (request: NextRequest) => {
  * @param request
  * @returns
  */
-const authMiddleware = async (request: NextRequest) => {
+const authMiddleware = async (request: NextRequest, event: NextFetchEvent) => {
   const { pathname, searchParams } = request.nextUrl
   if (WHITE_LIST.includes(pathname)) return NextResponse.next()
   const headersList = headers()
-  const token = headersList.get(tokenName)
+  const token = headersList.get(tokenName)?.replace(/^Bearer /, '')
   const [err, data] = await validateToken(token)
-  if (err)
-    return NextResponse.json({ msg: defaultTokenFailMsg }, { status: 401 })
+  if (err) return rp.ret401()
   const { payload } = data
+  const { id } = payload
+  const redisToken = await getToken(id)
+  if (redisToken === token) return rp.ret401()
+  setToken(id, redisToken)
   return NextResponse.next()
 }
 

@@ -1,6 +1,6 @@
-import { createClient } from 'redis'
+import { RedisClientType, createClient } from 'redis'
 
-let redis
+let redis: RedisClientType
 
 if (process.env.NODE_ENV === 'production') {
   redis = createClient({
@@ -20,7 +20,6 @@ if (process.env.NODE_ENV === 'production') {
   redis = global.redis
 }
 redis.on('error', err => console.log('Redis Client Error', err))
-
 await redis.connect()
 
 export default redis

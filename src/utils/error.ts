@@ -1,6 +1,6 @@
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 import { ZodError } from 'zod'
-import { defaultErrorMsg } from './response'
+import { defaultErrorMsg,handleNormalError } from './response'
 
 export function handleZodError(e: ZodError) {
   const errorInfo = e.errors
@@ -24,12 +24,5 @@ export function handleError(e: unknown = defaultErrorMsg) {
   throw handleNormalError(e)
 }
 
-export function handleNormalError(e:unknown){
-  return e instanceof Error
-    ? e.message
-    : typeof e === 'string'
-    ? e
-    : defaultErrorMsg
-}
 // import { logFileStruct } from 'lo-utils'
 // logFileStruct('./src/app', ['api'])

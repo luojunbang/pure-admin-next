@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './page.css'
 import {
   Card,
@@ -16,16 +16,19 @@ import EyeSvg from '@/assets/icons/eye.svg'
 import EyeSlashSvg from '@/assets/icons/eye-slash.svg'
 import { system } from '@/api'
 import md5 from 'crypto-js/md5'
+import { hasToken, saveToken } from '@/utils'
+import { useRouter } from 'next/navigation'
 
 export default function Login() {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const router = useRouter()
+
+  const [username, setUsername] = useState('admin')
+  const [password, setPassword] = useState('Admin@123')
   const [message, setMessage] = useState('')
 
   const [isShowPassword, setIsShowPassword] = useState(false)
   const toggleIsShowPassword = () => setIsShowPassword(!isShowPassword)
   const handleLoginValid = () => {
-    console.log(username, password)
     if (/^\d/.test(username) || username === '') {
       setMessage('Please enter a valid username')
       return false
@@ -41,8 +44,13 @@ export default function Login() {
     if (handleLoginValid()) {
       system
         .login({ username, password: md5(password).toString() })
-        .then(res => {
-          console.log(res)
+        .then(({ data }) => {
+          const { token } = data
+          saveToken(token)
+          router.push('/admin')
+        })
+        .catch(err => {
+          console.log(err)
         })
     }
   }
