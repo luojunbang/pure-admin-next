@@ -29,6 +29,6 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "swagger/index.js"  ],
   "exclude": ["node_modules"]
 }

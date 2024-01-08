@@ -5,14 +5,22 @@ export const defaultTokenFailMsg = 'TOKEN_FAIL'
 
 export const rp = {
   common(code: string, data: any, message?: string, config?: any) {
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         code,
         msg: message ?? '',
         data,
       },
-      config
+      {
+        ...config,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
     )
+    return response
   },
   ret200(data: any = {}) {
     return this.common(CODE.OK, data)
