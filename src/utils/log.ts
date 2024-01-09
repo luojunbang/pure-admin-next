@@ -1,8 +1,7 @@
-import chalk from 'chalk'
 import { generatorDate } from 'lo-utils'
 import { ensureFile, appendFile } from 'fs-extra'
 import { resolve } from 'path'
-
+import { generatorLogText } from './'
 enum LogType {
   DEBUG = 'DEBUG',
   INFO = 'INFO',
@@ -23,17 +22,14 @@ export class Log {
   }
 
   common(logType: LogType, ...[logText, ...args]) {
+    const ret =
+      generatorLogText(logType, this.type, ...[logText, ...args]) + '\n'
     ensureFile(this.path)
-      .then(res => {
-        return appendFile(
-          this.path,
-          `[${generatorDate(Date.now(), 'y-m-d h:i:s.e')}][${logType}]${
-            this.type ? ` [${this.type}]` : ''
-          } ${args.reduce((rs, i) => rs.replace('{}', i), logText)} \n`
-        )
+      .then((res) => {
+        return appendFile(this.path, ret)
       })
-      .then(res => {})
-      .catch(err => {})
+      .then((res) => {})
+      .catch((err) => {})
   }
 
   debug(...[logText, ...args]) {

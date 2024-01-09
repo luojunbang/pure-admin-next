@@ -98,7 +98,7 @@ export default function Login({
             <Button
               color="primary"
               size="lg"
-              className="my-4"
+              className="my-2"
               onClick={handleLogin}
             >
               {t('login')}
@@ -106,7 +106,7 @@ export default function Login({
           </CardBody>
           <CardFooter className="justify-center">
             <div className="text-sm text-center text-foreground-500">
-              Copyright 2023
+              Copyright&copy;2023
             </div>
           </CardFooter>
         </Card>

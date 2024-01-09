@@ -1,5 +1,5 @@
 import { kv } from '@vercel/kv'
-
+import { log } from '@/utils'
 const timeout = parseInt(process.env.TOKEN_TIMEOUT ?? '1200')
 const username = 'admin'
 const token = 'test token'
@@ -15,7 +15,7 @@ export async function setLock(key): Promise<Boolean> {
   if (setLockRet) return true
   const oldLockTime = (await kv.get(key)) as string
   if (currLockTime - +oldLockTime > lockTimeout) {
-    console.log('[LOG]: lock time out. ')
+    log('UserId {} lock time out. ', key)
     const _oldLockTime = await kv.getset(key, currLockTime.toString())
     if (_oldLockTime === oldLockTime && oldLockTime) {
       return true
@@ -28,12 +28,12 @@ export async function setToken(key, value) {
   const lockName = `${key}.lock`
   if (await setLock(lockName)) {
     // 有锁
-    console.log('[LOG]: add lock. update token ex time. ')
+    log('UserId {} add lock. update token expired time. ', key)
     return await kv.set(`${key}.token`, value, {
       ex: timeout,
     })
   }
-  console.log('[LOG]: has lock. do nothing. ')
+  log('UserId {} has lock. do nothing. ', key)
 }
 
 export async function getToken(key: string) {
