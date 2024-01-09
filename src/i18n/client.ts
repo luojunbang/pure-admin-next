@@ -22,8 +22,8 @@ i18next
     resourcesToBackend(
       // 懒加载
       (language: string, namespace: string) =>
-        import(`./locales/${language}/${namespace}.json`)
-    )
+        import(`./locales/${language}/${namespace}.json`),
+    ),
   )
   .init({
     ...getOptions(),
@@ -37,7 +37,7 @@ i18next
 export function useTranslation(
   lng: string,
   ns?: string,
-  options?: UseTranslationOptions<undefined> | undefined
+  options?: UseTranslationOptions<undefined> | undefined,
 ) {
   const [cookies, setCookie] = useCookies([cookieName])
   const ret = useTranslationOrg(ns, options)

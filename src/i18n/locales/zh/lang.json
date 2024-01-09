@@ -1,4 +1,5 @@
 {
   "title": "标题",
-  "your language is":"你的语言是 {{lang}}"
+  "your language is": "你的语言是 {{lang}}\t",
+  "systemName": "系统名称"
 }

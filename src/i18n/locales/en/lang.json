@@ -1,4 +1,5 @@
 {
   "title": "title",
-  "your language is":"Your language is {{lang}}"
+  "your language is": "Your language is {{lang}}",
+  "systemName": "SYSTEM NAME"
 }

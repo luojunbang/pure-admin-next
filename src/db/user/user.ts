@@ -6,7 +6,8 @@ const password = md5(process.env.DEFAULT_PASSWORD as string).toString()
 import { z } from 'zod'
 import { exclude } from 'lo-utils'
 
-const excludePassword = data => exclude<User, 'password'>(data, ['password'])
+const excludeUserInfo = (data) =>
+  exclude<User, 'password' | 'isValid'>(data, ['password', 'isValid'])
 
 export const userInput = z.object({
   username: z
@@ -52,7 +53,7 @@ export async function userAdd(user: User) {
     const data = await prisma.user.create({
       data: user,
     })
-    return excludePassword(data)
+    return excludeUserInfo(data)
   } catch (e) {
     handleError(e)
   }
@@ -73,11 +74,11 @@ export async function userInfo({
   const data = await prisma.user.findUnique({
     where: {
       username,
-      password
+      password,
     },
   })
   if (!data) throw `can' t find the record. `
-  return excludePassword(data)
+  return excludeUserInfo(data)
 }
 
 /**
@@ -144,10 +145,10 @@ export function initUserAdmin() {
         },
       },
     })
-    .then(res => {
+    .then((res) => {
       console.log('init user admin done. ')
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(`init admin user fail. \n${err}`)
     })
 }

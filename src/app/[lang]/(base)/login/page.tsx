@@ -18,8 +18,15 @@ import { system } from '@/api'
 import md5 from 'crypto-js/md5'
 import { hasToken, saveToken } from '@/utils'
 import { useRouter } from 'next/navigation'
+import { useTranslation } from '@/i18n'
 
-export default function Login() {
+export default function Login({
+  params: { lang },
+}: {
+  params: { lang: string }
+}) {
+  const { t } = useTranslation(lang, 'login')
+
   const router = useRouter()
 
   const [username, setUsername] = useState('admin')
@@ -49,7 +56,7 @@ export default function Login() {
           saveToken(token)
           router.push('/admin')
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err)
         })
     }
@@ -62,18 +69,18 @@ export default function Login() {
           className="w-[420px] absolute right-[200px] top-1/2 -translate-y-1/2 p-6"
         >
           <CardHeader>
-            <h1 className="flex text-2xl">SYSTEM NAME</h1>
+            <h1 className="flex text-2xl">{t('systemName')}</h1>
           </CardHeader>
           <CardBody className="p-3">
             <div>
               <Input
-                label="Username"
+                label={t('username')}
                 isInvalid={false}
                 onValueChange={setUsername}
               />
               <Input
                 className="mt-5"
-                label="Password"
+                label={t('password')}
                 type={isShowPassword ? 'text' : 'password'}
                 isInvalid={false}
                 onValueChange={setPassword}
@@ -94,7 +101,7 @@ export default function Login() {
               className="my-4"
               onClick={handleLogin}
             >
-              LOG IN
+              {t('login')}
             </Button>
           </CardBody>
           <CardFooter className="justify-center">

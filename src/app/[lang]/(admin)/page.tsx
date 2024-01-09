@@ -7,8 +7,8 @@ export default async function Page({ params }: { params: { lang: string } }) {
   const { t } = await useTranslationServer(lang)
 
   return (
-    <div className='h-screen'>
-      {t('title')} {t('your language is', { lang })} 
+    <div className="h-screen">
+      {t('title')} {t('your language is', { lang })}
     </div>
   )
 }

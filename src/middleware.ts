@@ -39,9 +39,9 @@ const pageMiddleware = (request: NextRequest, event: NextFetchEvent) => {
   if (!lang) lang = acceptLanguage.get(request.headers.get('Accept-Language'))
   if (!lang) lang = fallbackLng
 
-  if (!languages.some(i => pathname.startsWith(`/${i}`))) {
+  if (!languages.some((i) => pathname.startsWith(`/${i}`))) {
     return NextResponse.redirect(
-      new URL(`/${lang}${pathname}?${searchParams}`, request.url)
+      new URL(`/${lang}${pathname}?${searchParams}`, request.url),
     )
   }
 
@@ -63,12 +63,14 @@ const authMiddleware = async (request: NextRequest, event: NextFetchEvent) => {
   const { payload } = data
   const { id } = payload
   const redisToken = await getToken(id)
-  if (redisToken === token) return rp.ret401()
+  if (redisToken !== token) return rp.ret401()
   setToken(id, redisToken)
   return NextResponse.next()
 }
 
-export const WHITE_LIST = ['/login', '/register'].map(i => `/api${i}`)
+export const WHITE_LIST = ['/login', '/register'].map(
+  (i) => `${process.env.NEXT_PUBLIC_BASE_URL}${i}`,
+)
 
 export const config = {
   matcher: [
