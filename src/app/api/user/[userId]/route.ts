@@ -1,26 +1,40 @@
 import { userDelete, userInfo, userUpdate } from '@/db'
 import { NextRequest } from 'next/server'
 import { rp } from '@/utils/server'
+import { sysLog } from '@/utils/log'
 interface UserParams {
   userId: string
 }
 
-export async function GET(
-  request: Request,
-  { params }: { params: UserParams },
+/**
+ * @description 获取人员信息
+ * @swagger
+ * /user/{userId}
+ *  get:
+ *    parameters:
+        - name: userId
+          in: path
+          required: true
+          description: Parameter description in CommonMark or HTML.
+          schema:
+            type: string
+ */
+export async function getUserInfo(
+  request: NextRequest,
+  { params }: { params: UserParams }
 ) {
   const { userId } = params
   try {
-    const data = await userInfo({username:userId})
+    const data = await userInfo({ username: userId })
     return rp.ret200(data)
   } catch (e) {
     return rp.ret500(e)
   }
 }
 
-export async function PUT(
-  request: Request,
-  { params }: { params: UserParams },
+export async function updateUser(
+  request: NextRequest,
+  { params }: { params: UserParams }
 ) {
   try {
     const { userId } = params
@@ -32,9 +46,9 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: UserParams },
+export async function deleteUser(
+  request: NextRequest,
+  { params }: { params: UserParams }
 ) {
   try {
     const { userId } = params
@@ -44,3 +58,5 @@ export async function DELETE(
     return rp.ret500(e)
   }
 }
+
+export { deleteUser as DELETE, updateUser as PUT, getUserInfo as GET }

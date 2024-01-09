@@ -108,9 +108,12 @@ export async function userUpdate(username: string, user: User) {
  */
 export async function userDelete(username: string) {
   try {
-    const data = await prisma.user.delete({
+    const data = await prisma.user.update({
       where: {
         username,
+      },
+      data: {
+        isValid: false,
       },
     })
     return data

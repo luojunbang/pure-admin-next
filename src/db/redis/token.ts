@@ -15,7 +15,7 @@ export async function setLock(key): Promise<Boolean> {
   if (setLockRet) return true
   const oldLockTime = (await kv.get(key)) as string
   if (currLockTime - +oldLockTime > lockTimeout) {
-    console.log('lock time out. ')
+    console.log('[LOG]: lock time out. ')
     const _oldLockTime = await kv.getset(key, currLockTime.toString())
     if (_oldLockTime === oldLockTime && oldLockTime) {
       return true
@@ -28,12 +28,12 @@ export async function setToken(key, value) {
   const lockName = `${key}.lock`
   if (await setLock(lockName)) {
     // 有锁
-    console.log('add lock. update token ex time. ')
+    console.log('[LOG]: add lock. update token ex time. ')
     return await kv.set(`${key}.token`, value, {
       ex: timeout,
     })
   }
-  console.log('has lock. do nothing. ')
+  console.log('[LOG]: has lock. do nothing. ')
 }
 
 export async function getToken(key: string) {

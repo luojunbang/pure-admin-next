@@ -54,18 +54,22 @@ const pageMiddleware = (request: NextRequest, event: NextFetchEvent) => {
  * @returns
  */
 const authMiddleware = async (request: NextRequest, event: NextFetchEvent) => {
+  if(request.method.toUpperCase() === 'OPTIONS') return rp.ret200()
   const { pathname, searchParams } = request.nextUrl
-  if (WHITE_LIST.includes(pathname)) return NextResponse.next()
   const headersList = headers()
+  const response = NextResponse.next()
+
+  if (WHITE_LIST.includes(pathname)) return response
   const token = headersList.get(tokenName)?.replace(/^Bearer /, '')
   const [err, data] = await validateToken(token)
+  console.log('err:', err)
   if (err) return rp.ret401()
   const { payload } = data
   const { id } = payload
   const redisToken = await getToken(id)
   if (redisToken !== token) return rp.ret401()
   setToken(id, redisToken)
-  return NextResponse.next()
+  return response
 }
 
 export const WHITE_LIST = ['/login', '/register'].map(
