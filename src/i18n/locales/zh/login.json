@@ -2,7 +2,7 @@
   "login": "登 录",
   "password": "密码",
   "username": "用户名",
-  "dont_have_account": "Don't have an account?",
-  "signUp": "Sign Up",
+  "dont_have_account": "还没有账号？",
+  "signUp": "注 册",
   "account": "账 号"
 }

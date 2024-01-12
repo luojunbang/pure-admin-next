@@ -19,7 +19,7 @@ export default function Header() {
   const { t } = useTranslation(lang)
   const router = useRouter()
   useEffect(() => {
-    if (!hasToken()) {
+    if (!hasToken() && process.env.NODE_ENV === 'production') {
       router.replace('/login')
       return
     }
