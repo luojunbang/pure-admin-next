@@ -1,10 +1,8 @@
 'use client'
 
 import { useTranslation } from '@/i18n'
-import { Select, SelectSection, SelectItem } from '@nextui-org/select'
 import { languages } from '@/i18n'
-import { Button } from '@nextui-org/button'
-import { Switch, VisuallyHidden, useSwitch } from '@nextui-org/react'
+import { Button } from '@ui/button'
 import { useEffect, useState } from 'react'
 import {
   useParams,

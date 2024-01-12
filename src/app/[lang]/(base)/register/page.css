@@ -1,0 +1,38 @@
+.carousel-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  overflow: hidden;
+  margin: auto;
+}
+
+.slides {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  height: 300px;
+}
+
+.slide {
+  flex: 0 0 100%;
+  height: 100%;
+}
+
+.prev-btn,
+.next-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  color: white;
+}
+
+.prev-btn {
+  left: 0;
+}
+
+.next-btn {
+  right: 0;
+}

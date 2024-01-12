@@ -1,5 +1,8 @@
 {
   "login": "登 录",
   "password": "密码",
-  "username": "用户名"
+  "username": "用户名",
+  "dont_have_account": "Don't have an account?",
+  "signUp": "Sign Up",
+  "account": "账 号"
 }

@@ -1,5 +1,8 @@
 {
   "login": "LOG IN",
   "username": "Username",
-  "password": "Password"
+  "password": "Password",
+  "dont_have_account": "Don't have an account?",
+  "signUp": "Sign Up",
+  "account": "Account"
 }
