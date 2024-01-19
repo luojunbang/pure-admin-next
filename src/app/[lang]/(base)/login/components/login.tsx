@@ -4,91 +4,121 @@ import { useTranslation } from '@/i18n'
 import { useParams, useRouter } from 'next/navigation'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import EyeSvg from '@/assets/icons/eye.svg'
-import EyeSlashSvg from '@/assets/icons/eye-slash.svg'
+import Password from '@/components/password'
 import { useEffect, useMemo, useState } from 'react'
-
 import { system } from '@/api'
 import md5 from 'crypto-js/md5'
 import { saveToken } from '@/utils'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { useTheme } from 'next-themes'
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import 'animate.css'
+
 const Login = () => {
   const router = useRouter()
   const { lang } = useParams()
   const { t } = useTranslation(lang as string, 'login')
-  const { setTheme, theme } = useTheme()
-  const [username, setUsername] = useState('admin')
-  const [password, setPassword] = useState('Admin@123')
-  const [message, setMessage] = useState('')
+  const pleaseEnterAccount = t('pleaseEnterAccount')
+  const pleaseEnterPassword = t('pleaseEnterPassword')
+  const loginFormSchema = z.object({
+    account: z
+      .string({
+        required_error: pleaseEnterAccount,
+      })
+      .trim()
+      .min(1, { message: pleaseEnterAccount }),
+    password: z
+      .string({
+        required_error: pleaseEnterPassword,
+      })
+      .trim()
+      .min(1, { message: pleaseEnterPassword }),
+  })
 
-  const [isShowPassword, setIsShowPassword] = useState(false)
-  const toggleIsShowPassword = () => setIsShowPassword(!isShowPassword)
-  const handleLoginValid = () => {
-    if (/^\d/.test(username) || username === '') {
-      setMessage('Please enter a valid username')
-      return false
-    }
-    if (password === '') {
-      setMessage('Please enter a password')
-      return false
-    }
-    setMessage('')
-    return true
-  }
-  const handleLogin = () => {
-    setTheme(theme === 'dark' ? 'light' : 'dark')
-    return
-    if (handleLoginValid()) {
-      system
-        .login({ username, password: md5(password).toString() })
-        .then(({ data }) => {
-          const { token } = data
-          saveToken(token)
-          router.push('/')
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    }
+  const form = useForm<z.infer<typeof loginFormSchema>>({
+    resolver: zodResolver(loginFormSchema),
+    defaultValues: {
+      account: '',
+      password: '',
+    },
+  })
+  const { handleSubmit, control } = form
+  const handleLogin = (values: z.infer<typeof loginFormSchema>) => {
+    console.log('values:', values)
+    console.log('loginFormSchema.parse(values):', loginFormSchema.parse(values))
   }
 
   return (
     <>
       <div className="grid gap-6 text-left">
-        <div className="grid gap-2">
-          <label htmlFor="account">{t('account')}</label>
-          <Input id="account" onChange={(e) => setUsername(e.target.value)} />
-        </div>
-        <div className="grid gap-2">
-          <label htmlFor="password">{t('password')}</label>
-          <Input
-            id="password"
-            type={isShowPassword ? 'text' : 'password'}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div className="grid gap-2">
-          <Button color="primary" className="w-full" onClick={handleLogin}>
-            {t('login')}
-          </Button>
-          <div className="flex items-center justify-center text-center text-sm text-muted-foreground">
-            {t('dont_have_account')}
-            <Link
-              className={cn(
-                buttonVariants({
-                  variant: 'link',
-                }),
-                'ml-1 px-0 h-5 underline',
+        <Form {...form}>
+          <form onSubmit={handleSubmit(handleLogin)} className="grid gap-6">
+            <FormField
+              control={control}
+              name="account"
+              render={({ field, fieldState: { error } }) => {
+                return (
+                  <FormItem>
+                    <FormLabel>{t('account')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder={t('account')}
+                        {...field}
+                        className={cn(error && 'border-destructive')}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )
+              }}
+            ></FormField>
+            <FormField
+              control={control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('password')}</FormLabel>
+                  <FormControl>
+                    <Password {...field} placeholder={t('password')} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-              href="/register"
-            >
-              {' '}
-              {t('signUp')}
-            </Link>
-          </div>
-        </div>
+            ></FormField>
+            <div className="grid gap-2 mt-4">
+              <Button color="primary" type="submit" className="w-full">
+                {t('login')}
+              </Button>
+              <div className="flex items-center justify-center text-center text-sm text-muted-foreground">
+                {t('dont_have_account')}
+                <Link
+                  className={cn(
+                    buttonVariants({
+                      variant: 'link',
+                    }),
+                    'ml-1 px-0 h-5 underline',
+                  )}
+                  href="/register"
+                >
+                  {' '}
+                  {t('signUp')}
+                </Link>
+              </div>
+            </div>
+          </form>
+        </Form>
       </div>
     </>
   )

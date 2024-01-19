@@ -4,5 +4,7 @@
   "password": "Password",
   "dont_have_account": "Don't have an account?",
   "signUp": "Sign Up",
-  "account": "Account"
+  "account": "Account",
+  "pleaseEnterAccount": "Please enter account.",
+  "pleaseEnterPassword": "Please enter password."
 }

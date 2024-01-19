@@ -10,10 +10,17 @@ const excludeUserInfo = (data) =>
   exclude<User, 'password' | 'isValid'>(data, ['password', 'isValid'])
 
 export const userInput = z.object({
+  account: z
+    .string({
+      required_error: 'account is required',
+      invalid_type_error: 'account must be a string',
+    })
+    .min(2, 'less letter is 2. ')
+    .max(50, 'max letter is 50.'),
   username: z
     .string({
-      required_error: 'username is required',
-      invalid_type_error: 'username must be a string',
+      required_error: 'account is required',
+      invalid_type_error: 'account must be a string',
     })
     .min(2, 'less letter is 2. ')
     .max(50, 'max letter is 50.'),
@@ -32,7 +39,7 @@ const prisma = _prisma.$extends({
   query: {
     user: {
       create({ args, query }) {
-        args.data = userInput.passthrough().parse(args.data)
+        args.data = userInput.parse(args.data)
         return query(args)
       },
       update({ args, query }) {
@@ -60,20 +67,20 @@ export async function userAdd(user: User) {
 }
 
 /**
- * get user info by username
- * @param username
+ * get user info by account
+ * @param account
  * @returns
  */
 export async function userInfo({
-  username,
+  account,
   password,
 }: {
-  username: string
+  account: string
   password?: string
 }) {
   const data = await prisma.user.findUnique({
     where: {
-      username,
+      account,
       password,
     },
   })
@@ -82,16 +89,16 @@ export async function userInfo({
 }
 
 /**
- * update user by username
- * @param username
+ * update user by account
+ * @param account
  * @param user
  * @returns
  */
-export async function userUpdate(username: string, user: User) {
+export async function userUpdate(account: string, user: User) {
   try {
     const data = await prisma.user.update({
       where: {
-        username,
+        account,
       },
       data: user,
     })
@@ -102,15 +109,15 @@ export async function userUpdate(username: string, user: User) {
 }
 
 /**
- * delete user by username
- * @param username
+ * delete user by account
+ * @param account
  * @returns
  */
-export async function userDelete(username: string) {
+export async function userDelete(account: string) {
   try {
     const data = await prisma.user.update({
       where: {
-        username,
+        account,
       },
       data: {
         isValid: false,
@@ -130,6 +137,7 @@ export function initUserAdmin() {
   return prisma.user
     .create({
       data: {
+        account: 'admin',
         username: 'admin',
         password,
         isValid: true,

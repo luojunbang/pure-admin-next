@@ -15,7 +15,7 @@ export default async function Login({
   return (
     <>
       <div className="h-screen flex">
-        <div className="w-1/3 bg-zinc-900  p-20">
+        <div className="w-1/3 bg-zinc-900 p-10 hidden lg:block">
           <div className="flex items-center text-white">
             <div className="h-10 w-10 mr-4">
               <Logo className="h-full w-full" />
