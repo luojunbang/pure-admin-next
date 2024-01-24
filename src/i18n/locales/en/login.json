@@ -1,10 +1,11 @@
 {
-  "login": "LOG IN",
+  "signIn": "Sign in",
   "username": "Username",
   "password": "Password",
   "dont_have_account": "Don't have an account?",
   "signUp": "Sign Up",
   "account": "Account",
   "pleaseEnterAccount": "Please enter account.",
-  "pleaseEnterPassword": "Please enter password."
+  "pleaseEnterPassword": "Please enter password.",
+  "login": "SIGN IN"
 }

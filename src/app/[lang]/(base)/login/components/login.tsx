@@ -1,10 +1,10 @@
 'use client'
 
 import { useTranslation } from '@/i18n'
-import { useParams, useRouter } from 'next/navigation'
+import { useParams } from 'next/navigation'
 import { Button, buttonVariants } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import Password from '@/components/password'
+import { Password } from '@/components/password'
 import { useEffect, useMemo, useState } from 'react'
 import { system } from '@/api'
 import md5 from 'crypto-js/md5'
@@ -24,12 +24,11 @@ import {
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import 'animate.css'
 
 const Login = () => {
-  const router = useRouter()
   const { lang } = useParams()
   const { t } = useTranslation(lang as string, 'login')
+
   const pleaseEnterAccount = t('pleaseEnterAccount')
   const pleaseEnterPassword = t('pleaseEnterPassword')
   const loginFormSchema = z.object({
@@ -76,7 +75,9 @@ const Login = () => {
                       <Input
                         placeholder={t('account')}
                         {...field}
-                        className={cn(error && 'border-destructive')}
+                        className={cn(
+                          error && 'focus-visible:ring-destructive',
+                        )}
                       />
                     </FormControl>
                     <FormMessage />
@@ -99,7 +100,7 @@ const Login = () => {
             ></FormField>
             <div className="grid gap-2 mt-4">
               <Button color="primary" type="submit" className="w-full">
-                {t('login')}
+                {t('signIn')}
               </Button>
               <div className="flex items-center justify-center text-center text-sm text-muted-foreground">
                 {t('dont_have_account')}
