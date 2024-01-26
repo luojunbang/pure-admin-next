@@ -7,7 +7,6 @@ import { Input } from '@/components/ui/input'
 import { Password } from '@/components/password'
 import { useEffect, useMemo, useState } from 'react'
 import { system } from '@/api'
-import md5 from 'crypto-js/md5'
 import { saveToken } from '@/utils'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
@@ -24,13 +23,35 @@ import {
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Loader2 } from 'lucide-react'
+import 'animate.css'
+import MD5 from 'crypto-js/md5'
+
+export const useLogin = () => {
+  const [loading, setLoading] = useState(false)
+  let res
+  const login = (values) => {
+    setLoading(true)
+    return system
+      .login({
+        ...values,
+        password: MD5(values.password).toString(),
+      })
+      .finally(() => {
+        setLoading(false)
+      })
+  }
+  return { loading, res, login }
+}
 
 const Login = () => {
   const { lang } = useParams()
   const { t } = useTranslation(lang as string, 'login')
+  const [errMsg, setErrMsg] = useState('')
 
   const pleaseEnterAccount = t('pleaseEnterAccount')
   const pleaseEnterPassword = t('pleaseEnterPassword')
+
   const loginFormSchema = z.object({
     account: z
       .string({
@@ -49,19 +70,33 @@ const Login = () => {
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      account: '',
-      password: '',
+      account: 'admin',
+      password: 'Admin@123',
     },
   })
+  const { loading, login, res } = useLogin()
   const { handleSubmit, control } = form
-  const handleLogin = (values: z.infer<typeof loginFormSchema>) => {
+
+  const handleLogin = async (values: z.infer<typeof loginFormSchema>) => {
+    setErrMsg('')
     console.log('values:', values)
-    console.log('loginFormSchema.parse(values):', loginFormSchema.parse(values))
+    login(loginFormSchema.parse(values))
+      .then((res) => {
+        console.log('res:', res)
+      })
+      .catch((err) => {
+        setErrMsg(err.msg)
+      })
   }
 
   return (
     <>
-      <div className="grid gap-6 text-left">
+      <div className="relative grid gap-6 text-left">
+        {errMsg && (
+          <div className="absolute w-full bottom-full text-destructive text-center animate__animated animate__shakeX">
+            {errMsg}
+          </div>
+        )}
         <Form {...form}>
           <form onSubmit={handleSubmit(handleLogin)} className="grid gap-6">
             <FormField
@@ -99,9 +134,19 @@ const Login = () => {
               )}
             ></FormField>
             <div className="grid gap-2 mt-4">
-              <Button color="primary" type="submit" className="w-full">
-                {t('signIn')}
+              <Button
+                color="primary"
+                type="submit"
+                className="w-full flex items-center"
+                disabled={loading}
+              >
+                {loading ? (
+                  <Loader2 className="mr-2 animate-spin" />
+                ) : (
+                  t('signIn')
+                )}
               </Button>
+
               <div className="flex items-center justify-center text-center text-sm text-muted-foreground">
                 {t('dont_have_account')}
                 <Link
@@ -113,7 +158,6 @@ const Login = () => {
                   )}
                   href="/register"
                 >
-                  {' '}
                   {t('signUp')}
                 </Link>
               </div>

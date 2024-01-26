@@ -7,5 +7,6 @@
   "account": "Account",
   "pleaseEnterAccount": "Please enter account.",
   "pleaseEnterPassword": "Please enter password.",
-  "login": "SIGN IN"
+  "login": "SIGN IN",
+  "usernamePasswordError": "Account or password is not right."
 }

@@ -76,7 +76,7 @@ export async function userInfo({
   password,
 }: {
   account: string
-  password?: string
+  password: string
 }) {
   const data = await prisma.user.findUnique({
     where: {

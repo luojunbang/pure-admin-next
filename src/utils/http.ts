@@ -11,7 +11,10 @@ export const request = {
     method: method,
     url: string,
     data: any,
-    config: { headers?: Record<string, any>; params?: Record<string, any> } = {}
+    config: {
+      headers?: Record<string, any>
+      params?: Record<string, any>
+    } = {},
   ) {
     const headers = {
       [tokenName]: getToken(),
@@ -19,7 +22,7 @@ export const request = {
     }
     const _url = `${process.env.NEXT_PUBLIC_BASE_URL}${parseParams(
       config.params ?? {},
-      url
+      url,
     )}`
     let ret: Response
     if (['post', 'put'].includes(method.toLocaleLowerCase())) {
@@ -33,9 +36,11 @@ export const request = {
     }
     const resData: ResponseType<T> = await ret.json()
     if (ret.status === 401) navgateToLogin()
-    if (ret.ok && ret.status === 200 && isOk(resData.code)) {
-      if (resData.code === CODE.DONE) showMessage(resData.msg)
-      return resData
+    if (ret.ok && ret.status === 200) {
+      if (isOk(resData.code)) {
+        if (resData.code === CODE.DONE) showMessage(resData.msg)
+        return resData
+      } else return Promise.reject(resData)
     }
     fetchErrorHandler(resData)
     return Promise.reject(ret)
@@ -59,7 +64,6 @@ export function navgateToLogin() {
 
 export function showMessage(msg, type = 'success') {}
 
-
-export function isOk(code){
-  return [CODE.OK,CODE.DONE].includes(code)
+export function isOk(code) {
+  return [CODE.OK, CODE.DONE].includes(code)
 }

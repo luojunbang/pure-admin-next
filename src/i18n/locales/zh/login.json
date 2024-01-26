@@ -7,5 +7,6 @@
   "account": "账 号",
   "pleaseEnterAccount": "请输入账号",
   "pleaseEnterPassword": "请输入密码",
-  "login": "登录"
+  "login": "登录",
+  "usernamePasswordError": "用户名密码错误。"
 }
