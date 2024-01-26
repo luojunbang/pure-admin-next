@@ -21,3 +21,6 @@ jest.mock('react-i18next', () => ({
     init: () => {},
   },
 }))
+
+import jestFetch from 'jest-fetch-mock'
+jestFetch.enableMocks()

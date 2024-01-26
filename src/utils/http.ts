@@ -27,9 +27,13 @@ export const request = {
     let ret: Response
     if (['post', 'put'].includes(method.toLocaleLowerCase())) {
       headers['Content-Type'] = 'application/json'
-      ret = await fetch(_url, { method, headers, body: JSON.stringify(data) })
+      ret = await window.fetch(_url, {
+        method,
+        headers,
+        body: JSON.stringify(data),
+      })
     } else {
-      ret = await fetch(_url, {
+      ret = await window.fetch(_url, {
         method,
         headers,
       })

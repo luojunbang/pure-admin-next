@@ -8,5 +8,6 @@
   "pleaseEnterAccount": "请输入账号",
   "pleaseEnterPassword": "请输入密码",
   "login": "登录",
-  "usernamePasswordError": "用户名密码错误。"
+  "usernamePasswordError": "用户名密码错误。",
+  "account_invalid": "账号无效"
 }

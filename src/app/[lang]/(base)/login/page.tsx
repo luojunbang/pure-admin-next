@@ -25,7 +25,7 @@ export default async function Login({
         </div>
         <div className="relative flex-1 h-screen flex flex-col justify-center text-center">
           <div className="w-[350px] mx-auto grid gap-6">
-            <h1 className="text-2xl">{t('login')}</h1>
+            <h1 className="text-2xl font-bold">{t('login')}</h1>
             <div className="mb-4">
               <LoginComp></LoginComp>
             </div>

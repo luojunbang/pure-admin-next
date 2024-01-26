@@ -24,13 +24,12 @@ import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
-import 'animate.css'
 import MD5 from 'crypto-js/md5'
 
 export const useLogin = () => {
   const [loading, setLoading] = useState(false)
   let res
-  const login = (values) => {
+  const submitLogin = (values) => {
     setLoading(true)
     return system
       .login({
@@ -41,7 +40,7 @@ export const useLogin = () => {
         setLoading(false)
       })
   }
-  return { loading, res, login }
+  return { loading, res, submitLogin }
 }
 
 const Login = () => {
@@ -51,14 +50,16 @@ const Login = () => {
 
   const pleaseEnterAccount = t('pleaseEnterAccount')
   const pleaseEnterPassword = t('pleaseEnterPassword')
-
+  const accountInvaild = t('account_invalid')
   const loginFormSchema = z.object({
     account: z
       .string({
         required_error: pleaseEnterAccount,
       })
       .trim()
-      .min(1, { message: pleaseEnterAccount }),
+      .min(1, { message: pleaseEnterAccount })
+      .max(32, { message: accountInvaild + '2123' })
+      .regex(/^[^\d]+/, { message: '不能数字开头' }),
     password: z
       .string({
         required_error: pleaseEnterPassword,
@@ -70,22 +71,26 @@ const Login = () => {
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
-      account: 'admin',
-      password: 'Admin@123',
+      account: '',
+      password: '',
     },
   })
-  const { loading, login, res } = useLogin()
+  const { loading, submitLogin, res } = useLogin()
   const { handleSubmit, control } = form
 
   const handleLogin = async (values: z.infer<typeof loginFormSchema>) => {
-    setErrMsg('')
     console.log('values:', values)
-    login(loginFormSchema.parse(values))
+    setErrMsg('')
+    submitLogin(loginFormSchema.parse(values))
       .then((res) => {
-        console.log('res:', res)
+        console.log('res.........:', res)
       })
       .catch((err) => {
         setErrMsg(err.msg)
+        console.log('err:', err)
+      })
+      .finally(() => {
+        console.log('finally:')
       })
   }
 
@@ -93,7 +98,7 @@ const Login = () => {
     <>
       <div className="relative grid gap-6 text-left">
         {errMsg && (
-          <div className="absolute w-full bottom-full text-destructive text-center animate__animated animate__shakeX">
+          <div className="absolute w-full bottom-full text-destructive text-center animate__animated animate__headShake">
             {errMsg}
           </div>
         )}

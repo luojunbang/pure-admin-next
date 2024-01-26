@@ -3,12 +3,12 @@
 import { NextResponse } from 'next/server'
 import type { NextFetchEvent, NextRequest } from 'next/server'
 import { cookies, headers } from 'next/headers'
-import { cookieName, fallbackLng, languages } from '@/i18n/settings'
-import kv from '@vercel/kv'
 
+import { cookieName, fallbackLng, languages } from '@/i18n/settings'
+import { getLangFromCookies } from '@/i18n/server'
 import acceptLanguage from 'accept-language'
 import { tokenName } from './utils'
-import { defaultTokenFailMsg, rp } from './utils/response'
+import { rp } from './utils/response'
 import { validateToken } from './utils/token'
 import { getToken, setToken } from './db/redis/token'
 
@@ -32,12 +32,7 @@ export async function middleware(request: NextRequest, event: NextFetchEvent) {
 const pageMiddleware = (request: NextRequest, event: NextFetchEvent) => {
   const { pathname, searchParams } = request.nextUrl
 
-  let lang
-  const cookieStore = cookies()
-  if (cookieStore.has(cookieName))
-    lang = acceptLanguage.get(cookieStore.get(cookieName)?.value)
-  if (!lang) lang = acceptLanguage.get(request.headers.get('Accept-Language'))
-  if (!lang) lang = fallbackLng
+  const lang = getLangFromCookies(cookies(), request)
 
   if (!languages.some((i) => pathname.startsWith(`/${i}`))) {
     return NextResponse.redirect(
@@ -54,7 +49,7 @@ const pageMiddleware = (request: NextRequest, event: NextFetchEvent) => {
  * @returns
  */
 const authMiddleware = async (request: NextRequest, event: NextFetchEvent) => {
-  if(request.method.toUpperCase() === 'OPTIONS') return rp.ret200()
+  if (request.method.toUpperCase() === 'OPTIONS') return rp.ret200()
   const { pathname, searchParams } = request.nextUrl
   const headersList = headers()
   const response = NextResponse.next()
@@ -62,7 +57,6 @@ const authMiddleware = async (request: NextRequest, event: NextFetchEvent) => {
   if (WHITE_LIST.includes(pathname)) return response
   const token = headersList.get(tokenName)?.replace(/^Bearer /, '')
   const [err, data] = await validateToken(token)
-  console.log('err:', err)
   if (err) return rp.ret401()
   const { payload } = data
   const { id } = payload

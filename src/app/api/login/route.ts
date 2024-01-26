@@ -5,12 +5,12 @@ import { cookies, headers } from 'next/headers'
 import { pick } from 'lo-utils'
 import redis from '@/db/redis'
 import { getToken, setToken } from '@/db/redis/token'
-import { cookieName, fallbackLng, useTranslationServer } from '@/i18n'
+import { getLangFromCookies, useTranslationServer } from '@/i18n'
 import acceptLanguage from 'accept-language'
 
 export async function POST(request: Request) {
   const { t } = await useTranslationServer(
-    cookies().get(cookieName)?.value ?? fallbackLng,
+    getLangFromCookies(cookies()),
     'login',
   )
   const msg = t('usernamePasswordError')
