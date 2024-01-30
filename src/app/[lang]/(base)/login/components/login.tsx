@@ -23,7 +23,7 @@ import {
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Loader2 } from 'lucide-react'
+import { Loader2, ShieldCheck } from 'lucide-react'
 import MD5 from 'crypto-js/md5'
 
 export const useLogin = () => {
@@ -47,25 +47,17 @@ const Login = () => {
   const { lang } = useParams()
   const { t } = useTranslation(lang as string, 'login')
   const [errMsg, setErrMsg] = useState('')
-
+  const [isDone, setIsDone] = useState(false)
   const pleaseEnterAccount = t('pleaseEnterAccount')
   const pleaseEnterPassword = t('pleaseEnterPassword')
   const accountInvaild = t('account_invalid')
   const loginFormSchema = z.object({
     account: z
-      .string({
-        required_error: pleaseEnterAccount,
-      })
+      .string({})
       .trim()
       .min(1, { message: pleaseEnterAccount })
-      .max(32, { message: accountInvaild + '2123' })
-      .regex(/^[^\d]+/, { message: '不能数字开头' }),
-    password: z
-      .string({
-        required_error: pleaseEnterPassword,
-      })
-      .trim()
-      .min(1, { message: pleaseEnterPassword }),
+      .max(32, { message: accountInvaild }),
+    password: z.string({}).trim().min(1, { message: pleaseEnterPassword }),
   })
 
   const form = useForm<z.infer<typeof loginFormSchema>>({
@@ -79,19 +71,15 @@ const Login = () => {
   const { handleSubmit, control } = form
 
   const handleLogin = async (values: z.infer<typeof loginFormSchema>) => {
-    console.log('values:', values)
     setErrMsg('')
     submitLogin(loginFormSchema.parse(values))
       .then((res) => {
-        console.log('res.........:', res)
+        setIsDone(true)
       })
       .catch((err) => {
         setErrMsg(err.msg)
-        console.log('err:', err)
       })
-      .finally(() => {
-        console.log('finally:')
-      })
+      .finally(() => {})
   }
 
   return (
@@ -112,13 +100,7 @@ const Login = () => {
                   <FormItem>
                     <FormLabel>{t('account')}</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder={t('account')}
-                        {...field}
-                        className={cn(
-                          error && 'focus-visible:ring-destructive',
-                        )}
-                      />
+                      <Input placeholder={t('account')} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -140,12 +122,19 @@ const Login = () => {
             ></FormField>
             <div className="grid gap-2 mt-4">
               <Button
-                color="primary"
                 type="submit"
-                className="w-full flex items-center"
+                className={cn(
+                  isDone && 'bg-green-500 hover:bg-green-500',
+                  'w-full flex items-center transition-colors',
+                )}
                 disabled={loading}
               >
-                {loading ? (
+                {isDone ? (
+                  <>
+                    <ShieldCheck />{' '}
+                    <span className="ml-2">{t('signInSuccess')}</span>
+                  </>
+                ) : loading ? (
                   <Loader2 className="mr-2 animate-spin" />
                 ) : (
                   t('signIn')

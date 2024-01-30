@@ -13,7 +13,7 @@ import {
 } from '@testing-library/react'
 
 describe('Login', () => {
-  it('renders a form', async () => {
+  it('Renders a form', async () => {
     render(<Login />)
     const accountInput = screen.getByLabelText('account')
     expect(accountInput).toBeInTheDocument()
@@ -22,7 +22,7 @@ describe('Login', () => {
     expect(passwordInput).toBeInTheDocument()
   })
 
-  it('sign in action', async () => {
+  it('If the account input or password input is invalid, provide a tip.', async () => {
     render(<Login />)
     const signInButton = screen.getByText(/signIn/)
     expect(signInButton).toBeInTheDocument()
@@ -54,25 +54,86 @@ describe('Login', () => {
 
     expect(screen.queryByText('pleaseEnterAccount')).not.toBeInTheDocument()
     expect(screen.queryByText('pleaseEnterPassword')).not.toBeInTheDocument()
+
+    await act(() => {
+      // 填入正确内容
+      fireEvent.change(accountInput, { target: { value: 'a'.repeat(33) } })
+    })
+    expect(screen.queryByText('account_invalid')).toBeInTheDocument()
+  })
+  it('Sign in fail.', async () => {
+    render(<Login />)
     fetchMock.mockResponseOnce(
       () =>
         new Promise((resolve) =>
-          setTimeout(
-            () => resolve(JSON.stringify({ msg: 'ok', code: '3200' })),
-            100,
-          ),
+          setTimeout(() => resolve(JSON.stringify(failData)), 1000),
         ),
     )
 
+    await act(() => {
+      // 填入正确内容
+      const accountInput = screen.getByLabelText('account')
+      const passwordInput = screen.getByLabelText('password')
+
+      fireEvent.change(accountInput, { target: { value: '1' } })
+      fireEvent.change(passwordInput, { target: { value: '1' } })
+    })
     await act(() => {
       // 登录
       fireEvent.click(screen.getByText(/signIn/))
     })
 
-    expect(screen.queryByText('pleaseEnterAccount')).not.toBeInTheDocument()
-    expect(screen.queryByText('pleaseEnterPassword')).not.toBeInTheDocument()
     expect(screen.queryByRole('button')).toBeDisabled()
 
-    await screen.findByText('ok')
+    await screen.findByText('Account or password is not right.')
+  })
+  it('Sign in success.', async () => {
+    render(<Login />)
+    fetchMock.mockResponseOnce(
+      () =>
+        new Promise((resolve) =>
+          setTimeout(() => resolve(JSON.stringify(successData)), 1000),
+        ),
+    )
+    await act(() => {
+      // 填入正确内容
+      const accountInput = screen.getByLabelText('account')
+      const passwordInput = screen.getByLabelText('password')
+
+      fireEvent.change(accountInput, { target: { value: 'account' } })
+      fireEvent.change(passwordInput, { target: { value: 'password' } })
+    })
+    await act(() => {
+      // 登录
+      fireEvent.click(screen.getByText(/signIn/))
+    })
+    expect(screen.queryByRole('button')).toBeDisabled()
+
+    await screen.findByText('signInSuccess')
+
+    expect(
+      screen.queryByText('Account or password is not right.'),
+    ).not.toBeInTheDocument()
   })
 })
+
+const failData = {
+  code: '500',
+  msg: 'Account or password is not right.',
+  data: {},
+}
+
+const successData = {
+  code: '200',
+  msg: '',
+  data: {
+    id: '65b74f970368404567739e30',
+    account: 'admin',
+    username: 'admin',
+    updateDate: '2024-01-29T07:11:18.544Z',
+    createDate: '2024-01-29T07:11:19.284Z',
+    roleIds: [],
+    token:
+      'eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY1Yjc0Zjk3MDM2ODQwNDU2NzczOWUzMCIsInVzZXJuYW1lIjoiYWRtaW4iLCJpYXQiOjE3MDY1MTMxNDAsImlzcyI6InB1cmUtYWRtaW4ifQ.SEmx-hykhs1XOEDBd7DeOSKYzxFq1lY7Fmw-asN3oPY',
+  },
+}
